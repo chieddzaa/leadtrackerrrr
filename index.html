@@ -1,0 +1,440 @@
+<div id="app-root"></div>
+
+<style>
+  #lead-tracker-root {
+    --plum: #4B2C6F;
+    --plum-deep: #341C4E;
+    --lilac: #8B5FBF;
+    --lilac-soft: #C6A8E8;
+    --lilac-pale: #F3ECFB;
+    --white: #FFFFFF;
+    --ink: #2E1B42;
+    --ink-soft: #6B5A80;
+    --gold: #E8B84B;
+    font-family: 'Poppins', sans-serif;
+    color: var(--ink);
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  #lead-tracker-root * { box-sizing: border-box; }
+  .lt-header {
+    background: linear-gradient(135deg, var(--plum) 0%, var(--lilac) 100%);
+    border-radius: 20px;
+    padding: 28px 26px 24px;
+    color: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+  .lt-header::after {
+    content: "";
+    position: absolute;
+    right: -30px;
+    top: -30px;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+  }
+  .lt-header::before {
+    content: "";
+    position: absolute;
+    right: 40px;
+    bottom: -40px;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+  .lt-eyebrow {
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    opacity: 0.85;
+    margin: 0 0 6px;
+    position: relative;
+  }
+  .lt-title {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0 0 6px;
+    position: relative;
+  }
+  .lt-sub {
+    font-size: 13.5px;
+    opacity: 0.9;
+    margin: 0;
+    position: relative;
+  }
+
+  .lt-vine-wrap { margin: 22px 0 6px; }
+  .lt-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 18px 0;
+  }
+  .lt-stat {
+    background: var(--lilac-pale);
+    border-radius: 14px;
+    padding: 12px 10px;
+    text-align: center;
+  }
+  .lt-stat-num {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--plum-deep);
+    line-height: 1.1;
+  }
+  .lt-stat-label {
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    margin-top: 3px;
+    letter-spacing: 0.3px;
+  }
+
+  .lt-card {
+    background: var(--white);
+    border: 1px solid var(--lilac-pale);
+    border-radius: 16px;
+    padding: 18px;
+    margin-top: 16px;
+  }
+  .lt-card-title {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--plum-deep);
+    margin: 0 0 12px;
+  }
+  .lt-log-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .lt-log-row input[type="number"] {
+    width: 70px;
+    padding: 9px 10px;
+    border: 1.5px solid var(--lilac-soft);
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+  }
+  .lt-log-row input[type="date"] {
+    padding: 9px 10px;
+    border: 1.5px solid var(--lilac-soft);
+    border-radius: 10px;
+    font-size: 13px;
+    font-family: 'Poppins', sans-serif;
+    color: var(--ink);
+  }
+  .lt-log-row input[type="text"] {
+    flex: 1;
+    min-width: 120px;
+    padding: 9px 10px;
+    border: 1.5px solid var(--lilac-soft);
+    border-radius: 10px;
+    font-size: 13px;
+    font-family: 'Poppins', sans-serif;
+  }
+  .lt-btn {
+    background: var(--plum);
+    color: var(--white);
+    border: none;
+    border-radius: 10px;
+    padding: 9px 16px;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    transition: background 0.15s ease;
+  }
+  .lt-btn:hover { background: var(--plum-deep); }
+  .lt-btn-ghost {
+    background: var(--lilac-pale);
+    color: var(--plum-deep);
+    border: none;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+  }
+  .lt-quick { display: flex; gap: 6px; margin-top: 10px; }
+
+  .lt-milestones { display: flex; justify-content: space-between; margin-top: 4px; }
+  .lt-milestone { text-align: center; flex: 1; }
+  .lt-milestone-dot {
+    width: 30px; height: 30px; border-radius: 50%;
+    margin: 0 auto 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600;
+    background: var(--lilac-pale); color: var(--ink-soft);
+    border: 2px solid var(--lilac-soft);
+  }
+  .lt-milestone-dot.done {
+    background: var(--plum); color: var(--white); border-color: var(--plum);
+  }
+  .lt-milestone-label { font-size: 10px; color: var(--ink-soft); }
+
+  .lt-history { max-height: 220px; overflow-y: auto; margin-top: 4px; }
+  .lt-entry {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 9px 4px; border-bottom: 1px solid var(--lilac-pale);
+    font-size: 13px;
+  }
+  .lt-entry:last-child { border-bottom: none; }
+  .lt-entry-left { color: var(--ink); }
+  .lt-entry-date { color: var(--ink-soft); font-size: 11.5px; margin-right: 8px; }
+  .lt-entry-note { color: var(--ink-soft); font-size: 12px; font-style: italic; }
+  .lt-entry-del {
+    background: none; border: none; color: var(--ink-soft); cursor: pointer;
+    font-size: 12px; padding: 2px 6px;
+  }
+  .lt-entry-del:hover { color: #B5473F; }
+  .lt-empty { color: var(--ink-soft); font-size: 13px; text-align: center; padding: 12px 0; }
+
+  .lt-footer-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 14px; font-size: 11.5px; color: var(--ink-soft);
+  }
+  .lt-reset { background: none; border: none; color: var(--ink-soft); font-size: 11px; text-decoration: underline; cursor: pointer; font-family: 'Poppins', sans-serif; }
+</style>
+
+<div id="lead-tracker-root">
+  <div class="lt-header">
+    <p class="lt-eyebrow">Gutter Guys Plus &middot; Lead campaign</p>
+    <p class="lt-title">Natasha's Lead Tracker</p>
+    <p class="lt-sub" id="lt-header-sub">Jun 29 &ndash; Sep 29, 2026 &middot; Goal: 217 leads</p>
+  </div>
+
+  <div class="lt-vine-wrap">
+    <svg id="lt-vine-svg" viewBox="0 0 640 70" width="100%" height="70" style="display:block;"></svg>
+  </div>
+
+  <div class="lt-stats" id="lt-stats"></div>
+
+  <div class="lt-card">
+    <p class="lt-card-title">Milestones</p>
+    <div class="lt-milestones" id="lt-milestones"></div>
+  </div>
+
+  <div class="lt-card">
+    <p class="lt-card-title">Log leads</p>
+    <div class="lt-log-row">
+      <input type="date" id="lt-date-input" />
+      <input type="number" id="lt-count-input" min="1" value="1" />
+      <input type="text" id="lt-note-input" placeholder="Note (optional)" />
+      <button class="lt-btn" id="lt-add-btn">Add</button>
+    </div>
+    <div class="lt-quick">
+      <button class="lt-btn-ghost" data-qty="1">+1</button>
+      <button class="lt-btn-ghost" data-qty="2">+2</button>
+      <button class="lt-btn-ghost" data-qty="5">+5</button>
+    </div>
+  </div>
+
+  <div class="lt-card">
+    <p class="lt-card-title">Recent entries</p>
+    <div class="lt-history" id="lt-history"></div>
+  </div>
+
+  <div class="lt-footer-row">
+    <span id="lt-status">Loading&hellip;</span>
+    <button class="lt-reset" id="lt-reset-btn">Reset tracker</button>
+  </div>
+</div>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600&family=Poppins:wght@400;500;600&display=swap">
+
+<script>
+(function() {
+  var GOAL = 217;
+  var START = new Date('2026-06-29T00:00:00');
+  var END = new Date('2026-09-29T00:00:00');
+  var STORAGE_KEY = 'natasha-lead-tracker-entries';
+
+  var statusEl = document.getElementById('lt-status');
+  var dateInput = document.getElementById('lt-date-input');
+  var countInput = document.getElementById('lt-count-input');
+  var noteInput = document.getElementById('lt-note-input');
+
+  function todayISO() {
+    var d = new Date();
+    return d.toISOString().slice(0,10);
+  }
+  dateInput.value = todayISO();
+
+  var entries = [];
+
+  function daysBetween(a, b) {
+    return Math.round((b - a) / (1000 * 60 * 60 * 24));
+  }
+
+  function totalLeads() {
+    return entries.reduce(function(sum, e) { return sum + e.count; }, 0);
+  }
+
+  function render() {
+    var total = totalLeads();
+    var pct = Math.min(100, Math.round((total / GOAL) * 100));
+    var now = new Date();
+    var totalDays = daysBetween(START, END);
+    var daysElapsed = Math.max(0, Math.min(totalDays, daysBetween(START, now)));
+    var daysRemaining = Math.max(0, daysBetween(now, END));
+    var remaining = Math.max(0, GOAL - total);
+    var paceNeeded = daysRemaining > 0 ? (remaining / daysRemaining) : remaining;
+    var currentPace = daysElapsed > 0 ? (total / daysElapsed) : 0;
+
+    document.getElementById('lt-stats').innerHTML =
+      statCard(total, 'Booked') +
+      statCard(remaining, 'Remaining') +
+      statCard(daysRemaining, 'Days left') +
+      statCard(paceNeeded.toFixed(1), 'Needed / day') +
+      statCard(currentPace.toFixed(1), 'Current / day') +
+      statCard(pct + '%', 'Of goal');
+
+    renderVine(pct);
+    renderMilestones(pct);
+    renderHistory();
+
+    statusEl.textContent = total + ' of ' + GOAL + ' leads logged';
+  }
+
+  function statCard(num, label) {
+    return '<div class="lt-stat"><div class="lt-stat-num">' + num + '</div><div class="lt-stat-label">' + label + '</div></div>';
+  }
+
+  function flowerSVG(cx, cy, bloomed) {
+    var petalColor = bloomed ? '#8B5FBF' : '#E3D4F2';
+    var centerColor = bloomed ? '#E8B84B' : '#D9C7EC';
+    var petals = '';
+    var offsets = [[0,-7],[7,0],[0,7],[-7,0]];
+    for (var i = 0; i < offsets.length; i++) {
+      petals += '<ellipse cx="' + (cx + offsets[i][0]) + '" cy="' + (cy + offsets[i][1]) + '" rx="5" ry="4" fill="' + petalColor + '" />';
+    }
+    return petals + '<circle cx="' + cx + '" cy="' + cy + '" r="3.2" fill="' + centerColor + '" />';
+  }
+
+  function renderVine(pct) {
+    var svg = document.getElementById('lt-vine-svg');
+    var width = 640;
+    var stemPath = 'M 6 55 Q 100 20 200 45 T 400 40 T 620 50';
+    var pathLen = 660;
+    var drawLen = (pct / 100) * pathLen;
+
+    var flowers = '';
+    var positions = [0.16, 0.38, 0.6, 0.82, 0.97];
+    var coords = [[6,55],[160,32],[320,44],[470,38],[610,49]];
+    for (var i = 0; i < positions.length; i++) {
+      var bloomed = pct / 100 >= positions[i] - 0.02;
+      flowers += flowerSVG(coords[i][0], coords[i][1], bloomed);
+    }
+
+    svg.innerHTML =
+      '<path d="' + stemPath + '" fill="none" stroke="#E3D4F2" stroke-width="3" stroke-linecap="round" />' +
+      '<path d="' + stemPath + '" fill="none" stroke="#4B2C6F" stroke-width="3" stroke-linecap="round" ' +
+        'stroke-dasharray="' + pathLen + '" stroke-dashoffset="' + (pathLen - drawLen) + '" />' +
+      flowers;
+  }
+
+  function renderMilestones(pct) {
+    var stops = [25, 50, 75, 100];
+    var html = '';
+    stops.forEach(function(s) {
+      var done = pct >= s;
+      html += '<div class="lt-milestone"><div class="lt-milestone-dot' + (done ? ' done' : '') + '">' +
+        (done ? '&check;' : s + '%') + '</div><div class="lt-milestone-label">' + Math.round(GOAL * s / 100) + ' leads</div></div>';
+    });
+    document.getElementById('lt-milestones').innerHTML = html;
+  }
+
+  function renderHistory() {
+    var el = document.getElementById('lt-history');
+    if (entries.length === 0) {
+      el.innerHTML = '<div class="lt-empty">No entries yet &mdash; log your first leads above.</div>';
+      return;
+    }
+    var sorted = entries.slice().sort(function(a, b) { return b.date.localeCompare(a.date) || b.id - a.id; });
+    var html = '';
+    sorted.forEach(function(e) {
+      html += '<div class="lt-entry"><div class="lt-entry-left"><span class="lt-entry-date">' + formatDate(e.date) + '</span>' +
+        '<strong>+' + e.count + '</strong>' +
+        (e.note ? ' <span class="lt-entry-note">' + escapeHtml(e.note) + '</span>' : '') +
+        '</div><button class="lt-entry-del" data-id="' + e.id + '">Remove</button></div>';
+    });
+    el.innerHTML = html;
+    el.querySelectorAll('.lt-entry-del').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var id = Number(btn.getAttribute('data-id'));
+        entries = entries.filter(function(e) { return e.id !== id; });
+        save();
+        render();
+      });
+    });
+  }
+
+  function formatDate(iso) {
+    var d = new Date(iso + 'T00:00:00');
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
+
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  async function load() {
+    try {
+      var result = await window.storage.get(STORAGE_KEY, false);
+      entries = result ? JSON.parse(result.value) : [];
+    } catch (e) {
+      entries = [];
+    }
+    render();
+  }
+
+  async function save() {
+    try {
+      await window.storage.set(STORAGE_KEY, JSON.stringify(entries), false);
+    } catch (e) {
+      statusEl.textContent = 'Could not save &mdash; try again.';
+    }
+  }
+
+  function addEntry(count, note) {
+    if (!count || count <= 0) return;
+    entries.push({
+      id: Date.now() + Math.random(),
+      date: dateInput.value || todayISO(),
+      count: count,
+      note: note || ''
+    });
+    save();
+    render();
+  }
+
+  document.getElementById('lt-add-btn').addEventListener('click', function() {
+    var count = parseInt(countInput.value, 10);
+    addEntry(count, noteInput.value.trim());
+    noteInput.value = '';
+    countInput.value = 1;
+  });
+
+  document.querySelectorAll('.lt-quick').forEach(function(wrap) {
+    wrap.querySelectorAll('button').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        addEntry(parseInt(btn.getAttribute('data-qty'), 10), '');
+      });
+    });
+  });
+
+  document.getElementById('lt-reset-btn').addEventListener('click', function() {
+    if (confirm('Clear all logged leads? This cannot be undone.')) {
+      entries = [];
+      save();
+      render();
+    }
+  });
+
+  load();
+})();
+</script>
